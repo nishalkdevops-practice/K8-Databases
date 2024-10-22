@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: rabbitmq
+  namespace: roboshop
+  labels: 
+    app: rabbitmq
+    tier: db
+    project: roboshop
+spec:
+  selector:
+    matchLabels:
+      app: rabbitmq
+      tier: db
+      project: roboshop
+  serviceName: "rabbitmq"
+  replicas: 1 # by default is 1
+  template:
+    metadata:
+      labels:
+        app: rabbitmq
+        tier: db
+        project: roboshop # has to match .spec.selector.matchLabels
+    spec:
+      containers:
+      - name: rabbitmq
+        image: rabbitmq
+        volumeMounts:
+        - name: rabbitmq
+          mountPath: /var/lib/rabbitmq
+  # this PVC we are writing separately 
+      volumes: 
+      - name: rabbitmq
+        persistentVolumeClaim: # this is the PVC
+          claimName: ebs-rabbitmq-pvc 
+
+
