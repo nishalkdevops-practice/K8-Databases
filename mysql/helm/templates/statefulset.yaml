@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mysql
+  namespace: roboshop
+  labels: 
+    app: mysql
+    tier: db
+    project: roboshop
+spec:
+  selector:
+    matchLabels:
+      app: mysql
+      tier: db
+      project: roboshop
+  serviceName: "mysql"
+  replicas: 1 # by default is 1
+  template:
+    metadata:
+      labels:
+        app: mysql
+        tier: db
+        project: roboshop # has to match .spec.selector.matchLabels
+    spec:
+      containers:
+      - name: mysql
+        image: "nishaldevops/mysql:{{ .Values.statefulset.imageVersion }}"
+        envFrom:
+        - configMapRef:
+            name: mysql
+        volumeMounts:
+        - name: mysql
+          mountPath: /var/lib/mysql
+  # this PVC we are writing separately 
+      volumes: 
+      - name: mysql
+        persistentVolumeClaim: # this is the PVC
+          claimName: ebs-mysql-pvc 
+
+
