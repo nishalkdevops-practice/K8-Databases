@@ -28,14 +28,10 @@ spec:
         volumeMounts:
         - name: mongodb
           mountPath: /data/db
-  # this is PVC directly.
-  volumeClaimTemplates:
-  - metadata:
-      name: mongodb
-      namespace: roboshop
-    spec:
-      accessModes: [ "ReadWriteOnce" ]
-      storageClassName: "ebs-sc"
-      resources:
-        requests:
-          storage: 5Gi
+  # this PVC we are writing separately 
+      volumes: 
+      - name: mongodb
+        persistentVolumeClaim: # this is the PVC
+          claimName: ebs-dynamic-pvc 
+
+
