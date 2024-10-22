@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: mongodb
+  namespace: roboshop
   labels: 
     app: mongodb
     tier: db
@@ -31,6 +32,7 @@ spec:
   volumeClaimTemplates:
   - metadata:
       name: mongodb
+      namespace: roboshop
     spec:
       accessModes: [ "ReadWriteOnce" ]
       storageClassName: "roboshop-dynamic-sc"
@@ -42,6 +44,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: mongodb
+  namespace: roboshop
 spec:
   clusterIP: None #headless
   selector:
